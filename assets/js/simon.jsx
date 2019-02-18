@@ -37,7 +37,10 @@ class Simon extends React.Component {
     console.log("new view", view);
     this.setState(view.game);
     if(this.state.color != "") {
-      window.setTimeout(this.turn_off.bind(this), 200)
+      window.setTimeout(this.turn_off.bind(this), 100)
+    }
+    if(this.state.loser != "") {
+      alert(this.state.currentPlayer + " lost!")
     }
   }
 
@@ -80,9 +83,6 @@ class Simon extends React.Component {
           <div className="column">
             <div className="orange">{orangeButton}</div>
           </div>
-        </div>
-        <div className="row">
-          <h2>{this.state.loser}</h2>
         </div>
       </div>
     );
