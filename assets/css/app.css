@@ -1,0 +1,39 @@
+/* This file is for your main application css. */
+
+@import "~milligram/dist/milligram";
+@import url('https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800,900');
+
+body {
+  font-family: Raleway, sans-serif;
+  font-size: 16px;
+}
+
+button {
+  border: none;
+  height: 150px;
+  width: 200px;
+}
+
+.displayPattern {
+  height: 50px;
+}
+
+.red button {
+  background-color: red;
+}
+
+.green button {
+  background-color: green;
+}
+
+.blue button {
+  background-color: blue;
+}
+
+.orange button {
+  background-color: orange;
+}
+
+.flipped {
+  opacity: 0.6;
+}

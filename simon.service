@@ -1,0 +1,16 @@
+[Unit]
+Description=Simon Game Server
+
+[Service]
+Type=simple
+User=simon
+Group=simon
+Restart=on-failure
+Environment=MIX_ENV=prod "PORT=4793"
+Environment=LANG=en_US.UTF-8
+
+WorkingDirectory=/home/simon/simon
+ExecStart=/home/simon/simon/start.sh
+
+[Install]
+WantedBy=multi-user.target
