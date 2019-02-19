@@ -73,39 +73,49 @@ class Simon extends React.Component {
     return (
       <div className="container">
         <div className="row">
-          <h2>Current Player: {this.state.currentPlayer}</h2>
+          <h3>Current Player: {this.state.currentPlayer}</h3>
         </div>
-        <div className="row">
-          <div className="column">
-            <div className="red">{redButton}</div>
-          </div>
-          <div className="column">
-            <div className="green">{greenButton}</div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="column">
-            <div className="blue">{blueButton}</div>
-          </div>
-          <div className="column">
-            <div className="orange">{orangeButton}</div>
-          </div>
-        </div>
+        <table>
+          <tbody>
+            <tr>
+              <td className="red">{redButton}</td>
+              <td className="blue">{blueButton}</td>
+            </tr>
+            <tr>
+              <td className="orange">{orangeButton}</td>
+              <td className="green">{greenButton}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }
 }
 
+// <div className="row">
+//   <div className="column">
+//     <div className="red">{redButton}</div>
+//   </div>
+//   <div className="column">
+//     <div className="green">{greenButton}</div>
+//   </div>
+// </div>
+// <div className="row">
+//   <div className="column">
+//     <div className="blue">{blueButton}</div>
+//   </div>
+//   <div className="column">
+//     <div className="orange">{orangeButton}</div>
+//   </div>
+// </div>
+
+
 function ColorButton(props) {
   let {color, clicked, on_click} = props
   if(color == clicked) {
-    return   <div className="column">
-                  <p><button className="flipped"></button></p>
-             </div>
+    return   <div></div>
   }
   else {
-    return   <div className="column">
-                <p><button onClick={() => on_click(color)}></button></p>
-             </div>
+    return   <div onClick={() => on_click(color)}></div>
   }
 }

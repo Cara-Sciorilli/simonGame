@@ -5,8 +5,8 @@
 
 <div class="row">
   <div class="column">
-    <h1>Simon Game: <%= @game %></h1>
-    <h2>Player Name: <%= @name %></h2>
+    <h2>Simon Game: <%= @game %></h2>
+    <h4>Player Name: <%= @name %></h4>
     <div id="root">
       React component loading...
     </div>

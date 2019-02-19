@@ -1,10 +1,10 @@
 /* This file is for your main application css. */
 
 @import "~milligram/dist/milligram";
-@import url('https://fonts.googleapis.com/css?family=Raleway:200,300,400,500,600,700,800,900');
+@import url('https://fonts.googleapis.com/css?family=Rubik:200,300,400,500,600,700,800,900');
 
 body {
-  font-family: Raleway, sans-serif;
+  font-family: Rubik, sans-serif;
   font-size: 16px;
 }
 
@@ -14,22 +14,48 @@ button {
   width: 200px;
 }
 
-.red button {
+.red div {
+  background-color: #F06767;
+}
+
+.green div {
+  background-color: #67F082;
+}
+
+.blue div {
+  background-color: #677CF0;
+}
+
+.orange div {
+  background-color: #F0C667;
+}
+
+
+table {
+  width: 50%;
+
+}
+
+td {
+  border-bottom: none;
+}
+
+td div{
+  height: 100px;
+}
+
+.red div:active {
   background-color: red;
 }
 
-.green button {
-  background-color: green;
-}
-
-.blue button {
+.blue div:active {
   background-color: blue;
 }
 
-.orange button {
-  background-color: orange;
+.green div:active {
+  background-color: green;
 }
 
-.flipped {
-  opacity: 0.6;
+.orange div:active {
+  background-color: orange;
 }
