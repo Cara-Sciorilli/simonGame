@@ -16,18 +16,18 @@ defmodule SimonWeb.GamesChannel do
         cond do
           game == nil ->
             Game.new(name)
-          length(game.players) == 1 ->
-            Game.add_player(game, name)
           name in game.players ->
             game
+          game.pattern != [] ->
+            {:error, %{reason: "Game already started"}}
           true ->
-            {:error, %{reason: "too many players"}}
+            Game.add_player(game, name)
         end
-      if game != {:error, %{reason: "too many players"}} do
+      if game != {:error, %{reason: "Game already started"}} do
         BackupAgent.put(game_name, game)
         {:ok, %{"join" => game_name, "game" => Game.client_view(game)}, socket}
       else
-        {:error, %{reason: "too many players"}}
+        {:error, %{reason: "Game already started"}}
       end
     else
       {:error, %{reason: "unauthorized"}}
@@ -49,18 +49,24 @@ defmodule SimonWeb.GamesChannel do
     game = BackupAgent.get(game_name)
     |> Game.turn_off()
     BackupAgent.put(game_name, game)
-    push_update!(game_name, socket)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
+  def handle_in("reset_alert", _params, socket) do
+    game_name = socket.assigns[:game]
+    game = BackupAgent.get(game_name)
+    |> Game.reset_alert()
+    BackupAgent.put(game_name, game)
+  end
+
   def handle_out("update", game, socket) do
-    push socket, "update", game
+    push(socket, "update", game)
     {:noreply, socket}
   end
 
   def push_update!(game_name, socket) do
     game = BackupAgent.get(game_name)
-    SimonWeb.Endpoint.broadcast!(socket, "update", game)
+    broadcast!(socket, "update", game)
   end
 
   #Add authorization logic here as required.

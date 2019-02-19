@@ -22,12 +22,13 @@ class Simon extends React.Component {
       color: "",
       currentPlayer: "",
       loser: "",
+      givenAlert: "",
     };
 
     this.channel.join()
       .receive("ok", this.got_view.bind(this))
       .receive("error", resp => {
-        alert("Full game!")
+        alert("Game already begun!")
       })
 
     this.channel.on("update", this.got_view.bind(this))
@@ -35,12 +36,18 @@ class Simon extends React.Component {
 
   got_view(view) {
     console.log("new view", view);
-    this.setState(view.game);
-    if(this.state.color != "") {
-      window.setTimeout(this.turn_off.bind(this), 100)
+    if(view.game.givenAlert != "") {
+      alert(view.game.givenAlert)
+      this.channel.push("reset_alert", {});
     }
-    if(this.state.loser != "") {
-      alert(this.state.currentPlayer + " lost!")
+    else {
+      this.setState(view.game);
+      if(this.state.color != "") {
+        window.setTimeout(this.turn_off.bind(this), 100)
+      }
+      if(this.state.loser != "") {
+        alert(this.state.currentPlayer + " lost!")
+      }
     }
   }
 
