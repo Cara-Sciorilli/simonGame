@@ -8,15 +8,33 @@ body {
   font-size: 16px;
 }
 
-button {
-  border: none;
-  height: 150px;
-  width: 200px;
+.hidden {
+  visibility: hidden;
+}
+
+.btn {
+  background-color: lightgrey;
+  padding: 5px 10px;
+  border-radius: 2px;
+  font-weight: 300;
+}
+
+.btn:hover {
+  background-color: #AAAAAA;
+  padding: 5px 10px;
+  border-radius: 2px;
+  color: white;
+  font-weight: 300;
 }
 
 .red div {
   background-color: #F06767;
 }
+
+label {
+  display: inline-block;
+}
+
 
 .green div {
   background-color: #67F082;
@@ -28,12 +46,6 @@ button {
 
 .orange div {
   background-color: #F0C667;
-}
-
-
-table {
-  width: 50%;
-
 }
 
 td {

@@ -23,6 +23,7 @@ class Simon extends React.Component {
       currentPlayer: "",
       loser: "",
       givenAlert: "",
+      display: false
     };
 
     this.channel.join()
@@ -61,6 +62,11 @@ class Simon extends React.Component {
         .receive("ok", this.got_view.bind(this));
   }
 
+  showRules() {
+    let newState = !this.state.display;
+    this.setState({display: newState});
+  }
+
   render () {
     let redButton = <ColorButton color="red" clicked={this.state.color} on_click={this.on_click.bind(this)} />
 
@@ -70,11 +76,19 @@ class Simon extends React.Component {
 
     let orangeButton = <ColorButton color="orange" clicked={this.state.color} on_click={this.on_click.bind(this)} />
 
+    let rules = <RulesParagraph show={this.state.display}/>
+
+    let showRules = <RulesToggle show={this.state.display} showRules={this.showRules.bind(this)} />
+
     return (
       <div className="container">
         <div className="row">
           <h3>Current Player: {this.state.currentPlayer}</h3>
         </div>
+        <div className="row">
+      
+
+
         <table>
           <tbody>
             <tr>
@@ -87,27 +101,44 @@ class Simon extends React.Component {
             </tr>
           </tbody>
         </table>
+
+
+        </div>
+
+        {showRules}
+        {rules}
       </div>
     );
   }
 }
 
-// <div className="row">
-//   <div className="column">
-//     <div className="red">{redButton}</div>
-//   </div>
-//   <div className="column">
-//     <div className="green">{greenButton}</div>
-//   </div>
-// </div>
-// <div className="row">
-//   <div className="column">
-//     <div className="blue">{blueButton}</div>
-//   </div>
-//   <div className="column">
-//     <div className="orange">{orangeButton}</div>
-//   </div>
-// </div>
+function RulesToggle(props){
+  let {show, showRules} = props
+  if (show) {
+    return <div>
+            <label htmlFor="rulesbox" className="btn" onClick={() => showRules()}>Close</label>
+            <input type="checkbox" id="rulesbox" className="hidden " />
+          </div>
+  } else {
+    return <div>
+          <label htmlFor="rulesbox" className="btn" onClick={() => showRules()}>Read rules</label>
+          <input type="checkbox" id="rulesbox" className="hidden " />
+        </div>
+}
+}
+
+function RulesParagraph(props) {
+  let {show} = props
+  if (show == true) {
+  return <p>This is the game of Simon. Remember Simon Says, the game from your childhood?
+  It's just like that - only digital. You and your partner will take turns adding 1
+  click to the pattern at a time. When it's your turn, a pattern will be displayed to you.
+  Your task is to replicate the pattern correctly! If you do so, you then get to add 1
+  more click. The game gets harder as you go... good luck!</p>
+} else {
+  return null
+}
+}
 
 
 function ColorButton(props) {
