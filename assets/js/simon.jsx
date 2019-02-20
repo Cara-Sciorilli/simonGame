@@ -42,7 +42,12 @@ class Simon extends React.Component {
         window.setTimeout(this.turn_off.bind(this), 100)
       }*/
       if(this.state.loser != "") {
-        alert(this.state.currentPlayer + " lost!")
+        if(this.state.loser == window.playerName) {
+          return alert("You Lost!")
+        }
+        else {
+          return alert("You Won!")
+        }
       }
   }
 
