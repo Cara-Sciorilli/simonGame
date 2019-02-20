@@ -32,7 +32,7 @@ defmodule Simon.Game do
   end
 
   def guess(game, player, color) do
-    if (player == Enum.at(game.players, game.currentPlayerInd)) do
+    if (player == Enum.at(game.players, game.currentPlayerInd) &&     length(game.players) != 1) do
       cond do
         game.expectedColorInd == length(game.pattern) ->
           newIndex =
