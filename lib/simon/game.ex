@@ -7,7 +7,6 @@ defmodule Simon.Game do
       clickedColor: "",
       expectedColorInd: 0,
       loser: "",
-      givenAlert: "",
     }
   end
 
@@ -20,12 +19,10 @@ defmodule Simon.Game do
     cc = game.clickedColor
     cp = Enum.at(game.players, game.currentPlayerInd)
     l = game.loser
-    a = game.givenAlert
     %{
       color: cc,
       currentPlayer: cp,
       loser: l,
-      givenAlert: a
     }
   end
 
@@ -34,43 +31,32 @@ defmodule Simon.Game do
     |> Map.put(:clickedColor, "")
   end
 
-  def reset_alert(game) do
-    game
-    |> Map.put(:givenAlert, "")
-  end
-
   def guess(game, player, color) do
-    if (length(game.players) == 1) do
-      game
-      |> Map.put(:givenAlert, "Need more players to begin!")
-    else
-      if (player == Enum.at(game.players, game.currentPlayerInd)) do
-        cond do
-          game.expectedColorInd == length(game.pattern) ->
-            newIndex =
-              if game.currentPlayerInd == (length(game.players) - 1)  do
-                0
-              else
-                game.currentPlayerInd + 1
-              end
-            game
-            |> Map.put(:pattern, game.pattern ++ [color])
-            |> Map.put(:currentPlayerInd, newIndex)
-            |> Map.put(:expectedColorInd, 0)
-            |> Map.put(:clickedColor, color)
-          Enum.at(game.pattern, game.expectedColorInd) == color ->
-            game
-            |> Map.put(:expectedColorInd, game.expectedColorInd + 1)
-            |> Map.put(:clickedColor, color)
-          true ->
-            game
-            |> Map.put(:loser, player)
-            |> Map.put(:clickedColor, color)
-        end
-      else
-        game
-        |> Map.put(:givenAlert, "It's not your turn!")
+    if (player == Enum.at(game.players, game.currentPlayerInd)) do
+      cond do
+        game.expectedColorInd == length(game.pattern) ->
+          newIndex =
+            if game.currentPlayerInd == (length(game.players) - 1)  do
+              0
+            else
+              game.currentPlayerInd + 1
+            end
+          game
+          |> Map.put(:pattern, game.pattern ++ [color])
+          |> Map.put(:currentPlayerInd, newIndex)
+          |> Map.put(:expectedColorInd, 0)
+          |> Map.put(:clickedColor, color)
+        Enum.at(game.pattern, game.expectedColorInd) == color ->
+          game
+          |> Map.put(:expectedColorInd, game.expectedColorInd + 1)
+          |> Map.put(:clickedColor, color)
+        true ->
+          game
+          |> Map.put(:loser, player)
+          |> Map.put(:clickedColor, color)
       end
+    else
+        game
     end
   end
 end

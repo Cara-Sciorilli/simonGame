@@ -11,6 +11,7 @@ export default function simon_init(root, channel) {
   color: current color being clicked
   currentPlayer: current player
   loser: player that lost
+  display: to display rules or not
 }*/
 
 class Simon extends React.Component {
@@ -22,8 +23,7 @@ class Simon extends React.Component {
       color: "",
       currentPlayer: "",
       loser: "",
-      givenAlert: "",
-      display: false
+      display: false,
     };
 
     this.channel.join()
@@ -37,19 +37,13 @@ class Simon extends React.Component {
 
   got_view(view) {
     console.log("new view", view);
-    if(view.game.givenAlert != "") {
-      alert(view.game.givenAlert)
-      this.channel.push("reset_alert", {});
-    }
-    else {
-      this.setState(view.game);
-      if(this.state.color != "") {
+    this.setState(view.game);
+      /*if(this.state.color != "") {
         window.setTimeout(this.turn_off.bind(this), 100)
-      }
+      }*/
       if(this.state.loser != "") {
         alert(this.state.currentPlayer + " lost!")
       }
-    }
   }
 
   on_click(color) {
@@ -57,10 +51,10 @@ class Simon extends React.Component {
         .receive("ok", this.got_view.bind(this));
   }
 
-  turn_off() {
+  /*turn_off() {
     this.channel.push("turn_off", {})
         .receive("ok", this.got_view.bind(this));
-  }
+  }*/
 
   showRules() {
     let newState = !this.state.display;
@@ -80,13 +74,15 @@ class Simon extends React.Component {
 
     let showRules = <RulesToggle show={this.state.display} showRules={this.showRules.bind(this)} />
 
+    let currentPhrase = <WhosTurn current={this.state.currentPlayer} />
+
     return (
       <div className="container">
         <div className="row">
-          <h3>Current Player: {this.state.currentPlayer}</h3>
+          <h3>{currentPhrase}</h3>
         </div>
         <div className="row">
-      
+
 
 
         <table>
@@ -130,23 +126,33 @@ function RulesToggle(props){
 function RulesParagraph(props) {
   let {show} = props
   if (show == true) {
-  return <p>This is the game of Simon. Remember Simon Says, the game from your childhood?
-  It's just like that - only digital. You and your partner will take turns adding 1
-  click to the pattern at a time. When it's your turn, a pattern will be displayed to you.
-  Your task is to replicate the pattern correctly! If you do so, you then get to add 1
-  more click. The game gets harder as you go... good luck!</p>
-} else {
-  return null
-}
+    return <p>This is the game of Simon. Remember Simon Says, the game from your childhood?
+    It's just like that - only digital. You and your partner will take turns adding 1
+    click to the pattern at a time. When it's your turn, a pattern will be displayed to you.
+    Your task is to replicate the pattern correctly! If you do so, you then get to add 1
+    more click. The game gets harder as you go... good luck!</p>
+  } else {
+    return null
+  }
 }
 
 
 function ColorButton(props) {
   let {color, clicked, on_click} = props
-  if(color == clicked) {
+  /*if(color == clicked) {
     return   <div></div>
   }
-  else {
+  else {*/
     return   <div onClick={() => on_click(color)}></div>
+  //}
+}
+
+function WhosTurn(props) {
+  let {current} = props
+  if(current == window.playerName) {
+    return   "It is your turn!"
+  }
+  else {
+    return   "It is not your turn!"
   }
 }

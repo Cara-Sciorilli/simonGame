@@ -44,20 +44,13 @@ defmodule SimonWeb.GamesChannel do
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
-  def handle_in("turn_off", _params, socket) do
-    game_name = socket.assigns[:game]
-    game = BackupAgent.get(game_name)
-    |> Game.turn_off()
-    BackupAgent.put(game_name, game)
-    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
-  end
-
-  def handle_in("reset_alert", _params, socket) do
-    game_name = socket.assigns[:game]
-    game = BackupAgent.get(game_name)
-    |> Game.reset_alert()
-    BackupAgent.put(game_name, game)
-  end
+  #def handle_in("turn_off", _params, socket) do
+  #  game_name = socket.assigns[:game]
+  #  game = BackupAgent.get(game_name)
+  #  |> Game.turn_off()
+  #  BackupAgent.put(game_name, game)
+  #  {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  #end
 
   def handle_out("update", game, socket) do
     push(socket, "update", game)
