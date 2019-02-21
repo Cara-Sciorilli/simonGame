@@ -46,11 +46,9 @@ defmodule SimonWeb.GamesChannel do
 
   def handle_in("reset", _params, socket) do
     game_name = socket.assigns[:game]
-    player = socket.assigns[:name]
-    game = BackupAgent.delete(game_name)
+    BackupAgent.delete(game_name)
     push_gameOver!(socket)
     {:noreply, socket}
-    #{:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
   def handle_in("turn_off", _params, socket) do

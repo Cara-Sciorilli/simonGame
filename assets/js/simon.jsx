@@ -105,7 +105,7 @@ class Simon extends React.Component {
     let endMessage = <EndMessage winner={this.state.winner}
     player={window.playerName} gameOver={this.state.gameOver} userEnds={this.state.userEnds}/>
 
-    let resetButton = <Reset reset={this.reset.bind(this)} gameOver={this.state.gameOver}/>
+    let resetButton = <Reset reset={this.reset.bind(this)} gameOver={this.state.gameOver} winner={this.state.winner}/>
 
 
 
@@ -136,8 +136,8 @@ class Simon extends React.Component {
 
 
 function Reset(props) {
-  let {reset, gameOver}= props
-  if (gameOver) {
+  let {reset, gameOver, winner}= props
+  if (gameOver && winner != "") {
     return <button onClick={() => reset()}>end game</button>
   } else {
     return null;
