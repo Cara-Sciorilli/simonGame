@@ -26,6 +26,7 @@ class Simon extends React.Component {
       loser: "",
       winner: "",
       display: false,
+      gameOver: false,
     };
 
     this.channel.join()
@@ -41,15 +42,16 @@ class Simon extends React.Component {
     console.log("new view", view);
     this.setState(view.game);
       if(this.state.color != "") {
-        window.setTimeout(this.turn_off.bind(this), 100)
+        window.setTimeout(this.turn_off.bind(this), 400)
       }
       if(this.state.loser != "") {
-        if(this.state.loser == window.playerName) {
-          return alert("You Lost!")
-        }
-        else if(this.state.winner == window.playerName) {
-          return alert("You Won!")
-        }
+        this.setState({gameOver: true});
+        // if(this.state.loser == window.playerName) {
+        //   return alert("You Lost!")
+        // }
+        // else if(this.state.winner == window.playerName) {
+        //   return alert("You Won!")
+        // }
       }
   }
 
@@ -81,7 +83,12 @@ class Simon extends React.Component {
 
     let showRules = <RulesToggle show={this.state.display} showRules={this.showRules.bind(this)} />
 
-    let currentPhrase = <WhosTurn current={this.state.currentPlayer} />
+    let currentPhrase = <WhosTurn current={this.state.currentPlayer} gameOver={this.state.gameOver} />
+
+    let table = <Table red={redButton} green={greenButton} blue={blueButton} orange={orangeButton} gameOver={this.state.gameOver}/>
+
+    let endMessage = <EndMessage winner={this.state.winner} loser={this.state.loser} player={window.playerName} gameOver={this.state.gameOver}/>
+
 
     return (
       <div className="container">
@@ -89,23 +96,8 @@ class Simon extends React.Component {
           <h3>{currentPhrase}</h3>
         </div>
         <div className="row">
-
-
-
-        <table>
-          <tbody>
-            <tr>
-              <td className="red">{redButton}</td>
-              <td className="blue">{blueButton}</td>
-            </tr>
-            <tr>
-              <td className="orange">{orangeButton}</td>
-              <td className="green">{greenButton}</td>
-            </tr>
-          </tbody>
-        </table>
-
-
+          {endMessage}
+          {table}
         </div>
 
         {showRules}
@@ -113,6 +105,49 @@ class Simon extends React.Component {
       </div>
     );
   }
+}
+
+function EndMessage(props) {
+  let {winner, loser, player, gameOver} = props
+  if (!gameOver) {
+    return null;
+  } else {
+    if(loser == player) {
+      return <div>
+      <h1>💩 You Lost! 💩</h1>
+      <iframe src="https://giphy.com/embed/1BXa2alBjrCXC" width="480"
+      height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+      </div>
+    }
+    else if(winner == player) {
+      return <div>
+      <h1>🎉 You Won! 🎉</h1>
+      <iframe src="https://giphy.com/embed/26gsfdArwyEnXnDGw" width="480"
+      height="320" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+      </div>
+    }
+  }
+}
+
+
+function Table(props) {
+  let {red, green, blue, orange, gameOver} = props
+  if(!gameOver) {
+  return <table>
+    <tbody>
+      <tr>
+        <td className="red">{red}</td>
+        <td className="blue">{blue}</td>
+      </tr>
+      <tr>
+        <td className="orange">{orange}</td>
+        <td className="green">{green}</td>
+      </tr>
+    </tbody>
+  </table>
+} else {
+  return null;
+}
 }
 
 function RulesToggle(props){
@@ -148,7 +183,19 @@ function ColorButton(props) {
   let {color, clicked, on_click} = props
   if(color == clicked) {
     //This needs to render a lit up button with no on click
-    return   <div></div>
+    switch(color) {
+    case 'red':
+      return   <div className="redActive"></div>;
+    case 'green':
+      return   <div className="greenActive"></div>;
+    case 'blue':
+      return   <div className="blueActive"></div>;
+    case 'orange':
+      return   <div className="orangeActive"></div>;
+    default:
+      return   <div className="clicked"></div>;
+  }
+
   }
   else {
     //This needs to render a not lit up button with an on click
@@ -157,11 +204,15 @@ function ColorButton(props) {
 }
 
 function WhosTurn(props) {
-  let {current} = props
+  let {current, gameOver} = props
+  if(!gameOver) {
   if(current == window.playerName) {
     return   "It is your turn!"
   }
   else {
-    return   "It is not your turn!"
+    return   "It is your opponents turn!"
   }
+} else {
+  return null;
+}
 }

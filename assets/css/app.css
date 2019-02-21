@@ -52,6 +52,30 @@ td {
   border-bottom: none;
 }
 
+.clicked {
+  background-color: black !important;
+  /* border: 5px solid black; */
+}
+
+.redActive {
+  background-color: red !important;
+}
+
+.greenActive {
+  background-color: green !important;
+}
+
+.blueActive {
+  background-color: blue !important;
+}
+
+.orangeActive {
+  background-color: orange !important;
+}
+
+
+
+
 td div{
   height: 100px;
 }
