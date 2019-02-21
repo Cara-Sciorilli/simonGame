@@ -46,12 +46,6 @@ class Simon extends React.Component {
       }
       if(this.state.loser != "") {
         this.setState({gameOver: true});
-        // if(this.state.loser == window.playerName) {
-        //   return alert("You Lost!")
-        // }
-        // else if(this.state.winner == window.playerName) {
-        //   return alert("You Won!")
-        // }
       }
   }
 
