@@ -38,9 +38,9 @@ class Simon extends React.Component {
   got_view(view) {
     console.log("new view", view);
     this.setState(view.game);
-      /*if(this.state.color != "") {
+      if(this.state.color != "") {
         window.setTimeout(this.turn_off.bind(this), 100)
-      }*/
+      }
       if(this.state.loser != "") {
         if(this.state.loser == window.playerName) {
           return alert("You Lost!")
@@ -56,10 +56,10 @@ class Simon extends React.Component {
         .receive("ok", this.got_view.bind(this));
   }
 
-  /*turn_off() {
+  turn_off() {
     this.channel.push("turn_off", {})
         .receive("ok", this.got_view.bind(this));
-  }*/
+  }
 
   showRules() {
     let newState = !this.state.display;
@@ -144,12 +144,14 @@ function RulesParagraph(props) {
 
 function ColorButton(props) {
   let {color, clicked, on_click} = props
-  /*if(color == clicked) {
+  if(color == clicked) {
+    //This needs to render a lit up button with no on click
     return   <div></div>
   }
-  else {*/
+  else {
+    //This needs to render a not lit up button with an on click
     return   <div onClick={() => on_click(color)}></div>
-  //}
+  }
 }
 
 function WhosTurn(props) {

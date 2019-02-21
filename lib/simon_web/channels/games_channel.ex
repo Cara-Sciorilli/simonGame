@@ -40,25 +40,24 @@ defmodule SimonWeb.GamesChannel do
     game = BackupAgent.get(game_name)
     |> Game.guess(player, color)
     BackupAgent.put(game_name, game)
-    push_update!(game_name, socket)
+    push_update!(Game.client_view(game), socket)
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
-  #def handle_in("turn_off", _params, socket) do
-  #  game_name = socket.assigns[:game]
-  #  game = BackupAgent.get(game_name)
-  #  |> Game.turn_off()
-  #  BackupAgent.put(game_name, game)
-  #  {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
-  #end
+  def handle_in("turn_off", _params, socket) do
+    game_name = socket.assigns[:game]
+    game = BackupAgent.get(game_name)
+    |> Game.turn_off()
+    BackupAgent.put(game_name, game)
+    {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
 
   def handle_out("update", game, socket) do
-    push(socket, "update", game)
+    push(socket, "update", %{"game" => game})
     {:noreply, socket}
   end
 
-  def push_update!(game_name, socket) do
-    game = BackupAgent.get(game_name)
+  def push_update!(game, socket) do
     broadcast!(socket, "update", game)
   end
 
