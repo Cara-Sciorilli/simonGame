@@ -7,6 +7,7 @@ defmodule Simon.Game do
       clickedColor: "",
       expectedColorInd: 0,
       loser: "",
+      winner: false,
     }
   end
 
@@ -19,10 +20,12 @@ defmodule Simon.Game do
     cc = game.clickedColor
     cp = Enum.at(game.players, game.currentPlayerInd)
     l = game.loser
+    w = game.winner
     %{
       color: cc,
       currentPlayer: cp,
       loser: l,
+      winner: w,
     }
   end
 
@@ -51,9 +54,20 @@ defmodule Simon.Game do
           |> Map.put(:expectedColorInd, game.expectedColorInd + 1)
           |> Map.put(:clickedColor, color)
         true ->
-          game
-          |> Map.put(:loser, player)
-          |> Map.put(:clickedColor, color)
+          lessPlayers = List.delete(game.players, player)
+          if length(lessPlayers) == 1 do
+            game
+            |> Map.put(:winner, hd(lessPlayers))
+            |> Map.put(:loser, player)
+            |> Map.put(:players, lessPlayers)
+            |> Map.put(:clickedColor, color)
+          else
+            game
+            |> Map.put(:expectedColorInd, 0)
+            |> Map.put(:loser, player)
+            |> Map.put(:players, lessPlayers)
+            |> Map.put(:clickedColor, color)
+          end
       end
     else
         game

@@ -10,7 +10,8 @@ export default function simon_init(root, channel) {
 {
   color: current color being clicked
   currentPlayer: current player
-  loser: player that lost
+  loser: player that lost most recently
+  winner: winner
   display: to display rules or not
 }*/
 
@@ -23,6 +24,7 @@ class Simon extends React.Component {
       color: "",
       currentPlayer: "",
       loser: "",
+      winner: "",
       display: false,
     };
 
@@ -45,7 +47,7 @@ class Simon extends React.Component {
         if(this.state.loser == window.playerName) {
           return alert("You Lost!")
         }
-        else {
+        else if(this.state.winner == window.playerName) {
           return alert("You Won!")
         }
       }
