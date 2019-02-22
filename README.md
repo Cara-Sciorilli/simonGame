@@ -1,5 +1,7 @@
 # Simon
 
+Gifs taken from giphy.com, licensed under the creative commons license 
+
 To start your Phoenix server:
 
   * Install dependencies with `mix deps.get`
