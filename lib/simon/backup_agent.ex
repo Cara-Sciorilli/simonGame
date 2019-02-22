@@ -18,4 +18,10 @@ defmodule Simon.BackupAgent do
       Map.get(state, name)
     end
   end
+
+  def delete(name) do
+    Agent.update __MODULE__, fn state ->
+      Map.delete(state, name)
+    end
+  end
 end

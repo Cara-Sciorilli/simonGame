@@ -4,7 +4,7 @@ defmodule SimonWeb.GamesChannel do
   alias Simon.Game
   alias Simon.BackupAgent
 
-  intercept ["update"]
+  intercept ["update", "gameOver"]
 
   def join("games:" <> game_name, %{"name" => name}, socket) do
     if authorized?(name) do
@@ -44,6 +44,15 @@ defmodule SimonWeb.GamesChannel do
     {:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
   end
 
+  def handle_in("reset", _params, socket) do
+    game_name = socket.assigns[:game]
+    player = socket.assigns[:name]
+    game = BackupAgent.delete(game_name)
+    push_gameOver!(socket)
+    {:noreply, socket}
+    #{:reply, {:ok, %{"game" => Game.client_view(game)}}, socket}
+  end
+
   def handle_in("turn_off", _params, socket) do
     game_name = socket.assigns[:game]
     game = BackupAgent.get(game_name)
@@ -57,8 +66,17 @@ defmodule SimonWeb.GamesChannel do
     {:noreply, socket}
   end
 
+  def handle_out("gameOver", _params, socket) do
+    push(socket, "gameOver", %{})
+    {:noreply, socket}
+  end
+
   def push_update!(game, socket) do
     broadcast!(socket, "update", game)
+  end
+
+  def push_gameOver!(socket) do
+    broadcast!(socket, "gameOver", %{})
   end
 
   #Add authorization logic here as required.

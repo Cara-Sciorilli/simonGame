@@ -23,10 +23,13 @@ class Simon extends React.Component {
     this.state = {
       color: "",
       currentPlayer: "",
-      loser: "",
+      losers: [],
       winner: "",
       display: false,
       gameOver: false,
+      count: 0,
+      userEnds: false,
+      addClick: true,
     };
 
     this.channel.join()
@@ -36,21 +39,37 @@ class Simon extends React.Component {
       })
 
     this.channel.on("update", this.got_view.bind(this))
+
+    this.channel.on("gameOver", this.got_gameOver.bind(this))
+  }
+
+  got_gameOver(view) {
+    this.setState({userEnds: true});
   }
 
   got_view(view) {
-    console.log("new view", view);
     this.setState(view.game);
+      console.log(this.state.losers)
       if(this.state.color != "") {
         window.setTimeout(this.turn_off.bind(this), 400)
       }
-      if(this.state.loser != "") {
-        this.setState({gameOver: true});
+      if(this.state.losers != []) {
+        if(this.state.losers.includes(window.playerName)) {
+          this.setState({gameOver: true});
+        }
+        else if(this.state.winner == window.playerName) {
+          this.setState({gameOver: true});
+        }
       }
   }
 
   on_click(color) {
     this.channel.push("guess", {color: color})
+        .receive("ok", this.got_view.bind(this));
+  }
+
+  reset() {
+    this.channel.push("reset", {})
         .receive("ok", this.got_view.bind(this));
   }
 
@@ -77,48 +96,77 @@ class Simon extends React.Component {
 
     let showRules = <RulesToggle show={this.state.display} showRules={this.showRules.bind(this)} />
 
-    let currentPhrase = <WhosTurn current={this.state.currentPlayer} gameOver={this.state.gameOver} />
+    let currentPhrase = <WhosTurn current={this.state.currentPlayer}
+     gameOver={this.state.gameOver}  addClick={this.state.addClick}/>
 
-    let table = <Table red={redButton} green={greenButton} blue={blueButton} orange={orangeButton} gameOver={this.state.gameOver}/>
+    let table = <Table red={redButton} green={greenButton} blue={blueButton}
+    orange={orangeButton} gameOver={this.state.gameOver}/>
 
-    let endMessage = <EndMessage winner={this.state.winner} loser={this.state.loser} player={window.playerName} gameOver={this.state.gameOver}/>
+    let endMessage = <EndMessage winner={this.state.winner}
+    player={window.playerName} gameOver={this.state.gameOver} userEnds={this.state.userEnds}/>
+
+    let resetButton = <Reset reset={this.reset.bind(this)} gameOver={this.state.gameOver}/>
+
+
 
 
     return (
       <div className="container">
         <div className="row">
+          <div className="column">
           <h3>{currentPhrase}</h3>
+          <h5>Pattern length: {this.state.count}</h5>
+          </div>
         </div>
         <div className="row">
           {endMessage}
           {table}
+
         </div>
 
         {showRules}
         {rules}
+
+        {resetButton}
+
       </div>
     );
   }
 }
 
+
+function Reset(props) {
+  let {reset, gameOver}= props
+  if (gameOver) {
+    return <button onClick={() => reset()}>end game</button>
+  } else {
+    return null;
+  }
+}
+
 function EndMessage(props) {
-  let {winner, loser, player, gameOver} = props
-  if (!gameOver) {
+  let {winner, player, gameOver, userEnds} = props
+  if (gameOver && userEnds) {
+    return <div>
+    <h1>GAME HAS BEEN TERMINATED</h1>
+    <p>To join a new game, hit the back button on your browser and enter a
+    your player name and a game name (could be the same as this one!)</p>
+    </div>
+  } else if (!gameOver) {
     return null;
   } else {
-    if(loser == player) {
-      return <div>
-      <h1>💩 You Lost! 💩</h1>
-      <iframe src="https://giphy.com/embed/1BXa2alBjrCXC" width="480"
-      height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-      </div>
-    }
-    else if(winner == player) {
+   if(winner == player) {
       return <div>
       <h1>🎉 You Won! 🎉</h1>
       <iframe src="https://giphy.com/embed/26gsfdArwyEnXnDGw" width="480"
-      height="320" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+      height="320" frameBorder="0" className="giphy-embed" allowFullScreen></iframe>
       </div>
+    } else {
+        return <div>
+        <h1>💩 You Lost! 💩</h1>
+        <iframe src="https://giphy.com/embed/1BXa2alBjrCXC" width="480"
+        height="480" frameBorder="0" className="giphy-embed" allowFullScreen></iframe>
+        </div>
     }
   }
 }
@@ -198,15 +246,19 @@ function ColorButton(props) {
 }
 
 function WhosTurn(props) {
-  let {current, gameOver} = props
+  let {current, gameOver, addClick} = props
   if(!gameOver) {
-  if(current == window.playerName) {
-    return   "It is your turn!"
+    if(current == window.playerName) {
+      if (addClick) {
+        return   "It is your turn! Add a new tile"
+      } else {
+        return   "It is your turn! Replicate pattern"
+      }
+    }
+    else {
+      return   "It is your opponents turn!"
+    }
+  } else {
+    return null;
   }
-  else {
-    return   "It is your opponents turn!"
-  }
-} else {
-  return null;
-}
 }
